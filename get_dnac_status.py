@@ -1,6 +1,7 @@
 from twython import Twython
 import json
 import datetime
+import time
 
 # keys/secrets as strings in the following fields
 #credentials = {}
@@ -14,34 +15,38 @@ import datetime
 	#json.dump(credentials, file)
 
 data = []
-dataTime = datetime.datetime.now()
+ts=time.time()
+dataTime = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+index = 1
 error_count = 0
 down_devices = 0
-newOutput= dataTime
+print(dataTime)
 
-with open('data.json', 'w') as file:
+data = json.loads(open ('data.json').read())
+#data = json.load('{"errorCode":,"upTime":}')
+
+
+for item in data['response']:
+	#for item in data['response'][index]:
 	
-	for line in file:
-		data.append(json.loads(line)
-
-
-for item in data['response']
+	if (item["errorCode"]=="null") & (item["upTime"]!="0days, 00:00:00.00"):
+		error_count = error_count
+		down_devices = down_devices
 	
-	if item['errorCode']==[null] & item['upTime']!=["0days 00:00:00.00"]
+	elif (item["errorCode"]!="null") & (item["errorCode"]!="0days, 00:00:00.00"):
+			error_count += 1
+			down_devices = down_devices
 		
-	
-	else if item[errorCode']!=[null] & item['upTime']!=["0days 00:00:00.00"]
-		error_count += 1
-		
-	else
+	else:
 		error_count += 1
 		down_devices += 1
-	if error_count==0
+
+	if error_count==0:
 		print(dataTime + ": The Network is up! No issues detected")
-	else if error_count>=1 && down_devices<4
-		print(dataTime + ": The Network is up! (" + error_count + ") issues detected")
-	else if error_count>=1 && down_devices==4
-		print(dataTime + ": ALERT! The Network is down! (" + error_count + ") issues detected")
+	elif error_count>=1 & down_devices<4:
+		print(dataTime + ": The Network is up! (" + str(error_count) + ") issues detected")
+	elif error_count>=1 & down_devices==4:
+		print(dataTime + ": ALERT! The Network is down! (" + str(error_count) + ") issues detected")
 #print(new_output)
 
 
