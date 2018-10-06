@@ -41,3 +41,6 @@ login = dnac_login(dnac["host"], dnac["username"], dnac["password"])
 network_device_list(dnac, login)
 
 print(dnac_devices)
+
+with open('dnac_devices.json', 'w') as outfile:
+	json.dump(dnac_devices, outfile)
